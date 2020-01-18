@@ -20,13 +20,21 @@ public:
 
     explicit WorkplaceWidget(QWidget *parent,
                              QSqlDatabase *_db,
-                             int userID);
-    void FillTableQuery(QTableView*, QSqlQuery);
+                             int _userID);
+    void UpdateModel(QTableView*, QString, int);
     ~WorkplaceWidget();
+
+private slots:
+    void on_displayCartButton_clicked();
+
+    void on_displayShopButton_clicked();
+
+    void on_tabWidget_currentChanged(int index);
 
 private:
 
     Ui::WorkplaceWidget *ui;
+    int userID;
     QSqlDatabase *db;           // Shop Database
     QSqlQueryModel *model;      // Stored Model
 };

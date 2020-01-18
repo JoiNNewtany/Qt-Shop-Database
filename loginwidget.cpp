@@ -5,6 +5,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QSqlQuery>
+#include <QtDebug>
 
 LoginWidget::LoginWidget(QWidget *parent)
     : QWidget(parent)
@@ -18,7 +19,7 @@ LoginWidget::LoginWidget(QWidget *parent)
     db.setDatabaseName(dbname);
     db.open();
 
-    if(db.isOpenError()) // Tgis error doesn't work
+    if(db.isOpenError()) // Doesn't work
     {
         QMessageBox::critical(this,"Error", "Could not open database.\nApplication will exit.");
         QCoreApplication::exit(0);
@@ -51,7 +52,7 @@ void LoginWidget::on_loginButton_clicked()
 
     if(password == psw)
     {
-        QMessageBox::information(this, "Login", "Username and password are correct.");
+        //QMessageBox::information(this, "Login", "Username and password are correct.");
         this->hide();
         auto workplace = new WorkplaceWidget(nullptr, &db, id);
         workplace->show();

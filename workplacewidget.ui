@@ -33,7 +33,7 @@
      </property>
      <widget class="QWidget" name="userPage">
       <property name="enabled">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <attribute name="title">
        <string>User</string>
@@ -75,14 +75,14 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_3">
+          <widget class="QPushButton" name="addToCartButton">
            <property name="text">
             <string>Add to Cart</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_4">
+          <widget class="QPushButton" name="removeFromCartButton">
            <property name="text">
             <string>Remove from Cart</string>
            </property>
@@ -94,7 +94,7 @@
      </widget>
      <widget class="QWidget" name="vendorPage">
       <property name="enabled">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <attribute name="title">
        <string>Vendor</string>
@@ -152,7 +152,7 @@
      </widget>
      <widget class="QWidget" name="adminPage">
       <property name="enabled">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <attribute name="title">
        <string>Admin</string>

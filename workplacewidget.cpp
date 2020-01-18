@@ -11,23 +11,30 @@
 
 WorkplaceWidget::WorkplaceWidget(QWidget *parent,
                                  QSqlDatabase *_db,
-                                 int userID) :
+                                 int _userID) :
     QWidget(parent),
     ui(new Ui::WorkplaceWidget)
 {
     ui->setupUi(this);
 
     db = _db;
+    userID = _userID;
     model = new QSqlQueryModel;
+
+    db->open();
+
+    ui->userTableView->setModel(model);
+    ui->vendorTableView->setModel(model);
+    ui->adminTableView->setModel(model);
 
     // Checking access level
 
-    QSqlQuery q("SELECT AccessLv FROM Users WHERE Id = ?");
-    q.addBindValue(userID);
-    q.exec();
-    q.next();
+    QSqlQuery accessLv("SELECT AccessLv FROM Users WHERE Id = ?");
+    accessLv.addBindValue(userID);
+    accessLv.exec();
+    accessLv.next();
 
-    int id = q.value(1).toInt();
+    int id = accessLv.value(0).toInt();
 
     switch (id)
     {
@@ -35,9 +42,9 @@ WorkplaceWidget::WorkplaceWidget(QWidget *parent,
 
             this->setWindowTitle("Admin View");
 
-            ui->userPage->setEnabled(true);
-            ui->vendorPage->setEnabled(true);
-            ui->adminPage->setEnabled(true);
+            // Display vendor and admin items
+            //UpdateModel(ui->vendorTableView, "SELECT Name, Cost FROM Goods", -1);
+            //UpdateModel(ui->adminTableView, "SELECT * FROM Users", -1);
 
             break;
 
@@ -45,8 +52,11 @@ WorkplaceWidget::WorkplaceWidget(QWidget *parent,
 
             this->setWindowTitle("Vendor View");
 
-            ui->userPage->setEnabled(true);
-            ui->vendorPage->setEnabled(true);
+            ui->adminPage->~QWidget();
+
+            // Display vendor items
+
+            //UpdateModel(ui->vendorTableView, "SELECT Name, Cost FROM Goods", -1);
 
             break;
 
@@ -54,7 +64,8 @@ WorkplaceWidget::WorkplaceWidget(QWidget *parent,
 
             this->setWindowTitle("User View");
 
-            ui->userPage->setEnabled(true);
+            ui->adminPage->~QWidget();
+            ui->vendorPage->~QWidget();
 
             break;
 
@@ -67,20 +78,68 @@ WorkplaceWidget::WorkplaceWidget(QWidget *parent,
             break;
     }
 
-    // Fill Cart table
-    QSqlQuery q1("SELECT g.Name, g.Cost FROM Cart c, Goods g WHERE c.userID = ? AND g.Id = c.GoodId");
-    q1.addBindValue(userID);
-    FillTableQuery(ui->userTableView, q1);
+    // Display shop items
+
+    //UpdateModel(ui->userTableView, "SELECT Name, Cost FROM Goods", -1);
 }
 
-void WorkplaceWidget::FillTableQuery(QTableView *table, QSqlQuery query)
+void WorkplaceWidget::UpdateModel(QTableView *table, QString query, int userid)
 {
-    model->setQuery(query);
-    table->setModel(model);
+    // Fill a table view
+
+    QSqlQuery q(query);
+
+    // Using cringy implementation because that's enough here
+
+    if (userid >= 0)
+    {
+        q.addBindValue(userid);
+    }
+
+    q.exec();
+    model->setQuery(q);
     table->show();
 }
 
 WorkplaceWidget::~WorkplaceWidget()
 {
     delete ui;
+}
+
+// ==== Slots ==== //
+
+void WorkplaceWidget::on_displayCartButton_clicked()
+{
+    UpdateModel(ui->userTableView,
+                "SELECT g.Name, g.Cost FROM Cart c, Goods g WHERE c.userID = ? AND g.Id = c.GoodId",
+                userID);
+    ui->addToCartButton->setEnabled(false);
+    ui->removeFromCartButton->setEnabled(true);
+}
+
+void WorkplaceWidget::on_displayShopButton_clicked()
+{
+    UpdateModel(ui->userTableView, "SELECT Name, Cost FROM Goods", -1);
+    ui->addToCartButton->setEnabled(true);
+    ui->removeFromCartButton->setEnabled(false);
+}
+
+void WorkplaceWidget::on_tabWidget_currentChanged(int index)
+{
+    switch (index)
+    {
+        case 0: // User
+            UpdateModel(ui->userTableView, "SELECT Name, Cost FROM Goods", -1);
+            ui->addToCartButton->setEnabled(true);
+            ui->removeFromCartButton->setEnabled(false);
+        break;
+
+        case 1: // Vendor
+            UpdateModel(ui->vendorTableView, "SELECT Name, Cost FROM Goods", -1);
+        break;
+
+        case 2: // Admin
+            UpdateModel(ui->adminTableView, "SELECT * FROM Users", -1);
+        break;
+    }
 }
