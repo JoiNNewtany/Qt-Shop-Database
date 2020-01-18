@@ -110,8 +110,9 @@ WorkplaceWidget::~WorkplaceWidget()
 
 void WorkplaceWidget::on_displayCartButton_clicked()
 {
-    UpdateModel(ui->userTableView,
-                "SELECT g.Name, g.Cost FROM Cart c, Goods g WHERE c.userID = ? AND g.Id = c.GoodId",
+    UpdateModel(ui->userTableView, "SELECT g.Name, g.Cost \
+                                    FROM Cart c, Goods g \
+                                    WHERE c.userID = ? AND g.Id = c.GoodId",
                 userID);
     ui->addToCartButton->setEnabled(false);
     ui->removeFromCartButton->setEnabled(true);
@@ -142,4 +143,21 @@ void WorkplaceWidget::on_tabWidget_currentChanged(int index)
             UpdateModel(ui->adminTableView, "SELECT * FROM Users", -1);
         break;
     }
+}
+
+void WorkplaceWidget::on_addGoodButton_clicked()
+{
+    if (ui->goodNameEdit->text().length() > 0)
+    {
+        QSqlQuery q("INSERT INTO Goods(Id, Name, Cost) VALUES (NULL, ?, ?)");
+        q.addBindValue(ui->goodNameEdit->text());
+        q.addBindValue(ui->goodPriceEdit->value());
+        q.exec();
+        UpdateModel(ui->vendorTableView, "SELECT Name, Cost FROM Goods", -1);
+    }
+}
+
+void WorkplaceWidget::on_removeGoodButton_clicked()
+{
+
 }

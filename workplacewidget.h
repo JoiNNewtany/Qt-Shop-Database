@@ -31,6 +31,10 @@ private slots:
 
     void on_tabWidget_currentChanged(int index);
 
+    void on_addGoodButton_clicked();
+
+    void on_removeGoodButton_clicked();
+
 private:
 
     Ui::WorkplaceWidget *ui;
