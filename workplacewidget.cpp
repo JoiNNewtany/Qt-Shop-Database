@@ -77,10 +77,6 @@ WorkplaceWidget::WorkplaceWidget(QWidget *parent,
 
             break;
     }
-
-    // Display shop items
-
-    //UpdateModel(ui->userTableView, "SELECT Name, Cost FROM Goods", -1);
 }
 
 void WorkplaceWidget::UpdateModel(QTableView *table, QString query, int userid)
@@ -111,7 +107,7 @@ WorkplaceWidget::~WorkplaceWidget()
 void WorkplaceWidget::on_displayCartButton_clicked()
 {
     UpdateModel(ui->userTableView,
-                "SELECT g.Name, g.Cost FROM Cart c, Goods g WHERE c.userID = ? AND g.Id = c.GoodId",
+                "SELECT c.Id, g.Name, g.Cost FROM Cart c, Goods g WHERE c.userID = ? AND g.Id = c.GoodId",
                 userID);
     ui->addToCartButton->setEnabled(false);
     ui->removeFromCartButton->setEnabled(true);
@@ -119,7 +115,7 @@ void WorkplaceWidget::on_displayCartButton_clicked()
 
 void WorkplaceWidget::on_displayShopButton_clicked()
 {
-    UpdateModel(ui->userTableView, "SELECT Name, Cost FROM Goods", -1);
+    UpdateModel(ui->userTableView, "SELECT * FROM Goods", -1);
     ui->addToCartButton->setEnabled(true);
     ui->removeFromCartButton->setEnabled(false);
 }
@@ -129,17 +125,82 @@ void WorkplaceWidget::on_tabWidget_currentChanged(int index)
     switch (index)
     {
         case 0: // User
-            UpdateModel(ui->userTableView, "SELECT Name, Cost FROM Goods", -1);
+
+            UpdateModel(ui->userTableView, "SELECT * FROM Goods", -1);
             ui->addToCartButton->setEnabled(true);
             ui->removeFromCartButton->setEnabled(false);
-        break;
+
+            break;
 
         case 1: // Vendor
-            UpdateModel(ui->vendorTableView, "SELECT Name, Cost FROM Goods", -1);
-        break;
+
+            UpdateModel(ui->vendorTableView, "SELECT * FROM Goods", -1);
+
+            break;
 
         case 2: // Admin
+
             UpdateModel(ui->adminTableView, "SELECT * FROM Users", -1);
-        break;
+
+            break;
     }
+}
+
+void WorkplaceWidget::on_addGoodButton_clicked()
+{
+    // Add a good
+
+    if (ui->goodNameEdit->text().length() > 0)
+    {
+        QSqlQuery q("INSERT INTO Goods(Id, Name, Cost) VALUES (NULL, ?, ?)");
+        q.addBindValue(ui->goodNameEdit->text());
+        q.addBindValue(ui->goodPriceEdit->value());
+        q.exec();
+
+        UpdateModel(ui->vendorTableView, "SELECT * FROM Goods", -1);
+    }
+}
+
+void WorkplaceWidget::on_addToCartButton_clicked()
+{
+    QSqlQuery addToCartCheck("SELECT COUNT(*) FROM Goods");
+    addToCartCheck.exec();
+    addToCartCheck.next();
+
+    if (ui->cartIdSpinBox->value() < addToCartCheck.value(0).toInt())
+    {
+        QSqlQuery addToCart("INSERT INTO Cart (UserId, GoodId) VALUES (?, ?)");
+        addToCart.addBindValue(userID);
+        addToCart.addBindValue(ui->cartIdSpinBox->value());
+        qDebug() << addToCart.exec();
+    }
+}
+
+void WorkplaceWidget::on_removeGoodButton_clicked()
+{
+    QSqlQuery removeGood("DELETE FROM Goods WHERE Goods.Id = ?");
+    removeGood.addBindValue(ui->goodIdSpinBox->value());
+    qDebug() << removeGood.exec();
+
+    UpdateModel(ui->vendorTableView, "SELECT * FROM Goods", -1);
+}
+
+void WorkplaceWidget::on_removeFromCartButton_clicked()
+{
+    QSqlQuery removeCart("DELETE FROM Cart WHERE Cart.Id = ?");
+    removeCart.addBindValue(ui->cartIdSpinBox->value());
+    qDebug() << removeCart.exec();
+
+    UpdateModel(ui->userTableView,
+        "SELECT c.Id, g.Name, g.Cost FROM Cart c, Goods g WHERE c.userID = ? AND g.Id = c.GoodId",
+        userID);
+}
+
+void WorkplaceWidget::on_removeUserButton_clicked()
+{
+    QSqlQuery removeUser("DELETE FROM Users WHERE Users.Id = ?");
+    removeUser.addBindValue(ui->userIdSpinBox->value());
+    qDebug() << removeUser.exec();
+
+    UpdateModel(ui->adminTableView, "SELECT * FROM Users", -1);
 }

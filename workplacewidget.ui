@@ -29,7 +29,7 @@
       <enum>QTabWidget::North</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="userPage">
       <property name="enabled">
@@ -49,7 +49,7 @@
         <widget class="QTableView" name="userTableView"/>
        </item>
        <item>
-        <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0,0">
+        <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0,0,0">
          <property name="leftMargin">
           <number>0</number>
          </property>
@@ -71,6 +71,16 @@
           <widget class="Line" name="line">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSpinBox" name="cartIdSpinBox">
+           <property name="prefix">
+            <string>Item Id: </string>
+           </property>
+           <property name="minimum">
+            <number>1</number>
            </property>
           </widget>
          </item>
@@ -122,13 +132,6 @@
          <item row="0" column="1">
           <widget class="QLineEdit" name="goodNameEdit"/>
          </item>
-         <item row="2" column="2">
-          <widget class="QPushButton" name="removeGoodButton">
-           <property name="text">
-            <string>Remove Good</string>
-           </property>
-          </widget>
-         </item>
          <item row="0" column="0">
           <widget class="QLabel" name="goodNameLabel">
            <property name="text">
@@ -147,6 +150,30 @@
        </item>
        <item>
         <widget class="QTableView" name="vendorTableView"/>
+       </item>
+       <item>
+        <layout class="QGridLayout" name="gridLayout_4" rowstretch="0" columnstretch="0,0">
+         <property name="horizontalSpacing">
+          <number>6</number>
+         </property>
+         <item row="0" column="0">
+          <widget class="QSpinBox" name="goodIdSpinBox">
+           <property name="prefix">
+            <string>Good Id: </string>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QPushButton" name="removeGoodButton">
+           <property name="text">
+            <string>Remove Good</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
       </layout>
      </widget>
@@ -167,13 +194,6 @@
           <widget class="QPushButton" name="changeUserButton">
            <property name="text">
             <string>Change User</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="2">
-          <widget class="QPushButton" name="removeUserButton">
-           <property name="text">
-            <string>Remove User</string>
            </property>
           </widget>
          </item>
@@ -205,7 +225,23 @@
           <widget class="QLineEdit" name="userPasswordEdit"/>
          </item>
          <item row="2" column="1">
-          <widget class="QComboBox" name="userAccessLvEdit"/>
+          <widget class="QComboBox" name="userAccessLvEdit">
+           <item>
+            <property name="text">
+             <string>User</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Vendor</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Admin</string>
+            </property>
+           </item>
+          </widget>
          </item>
          <item row="2" column="0">
           <widget class="QLabel" name="userAccessLvLabel">
@@ -218,6 +254,27 @@
        </item>
        <item>
         <widget class="QTableView" name="adminTableView"/>
+       </item>
+       <item>
+        <layout class="QGridLayout" name="gridLayout_5" columnstretch="0,0">
+         <item row="0" column="0">
+          <widget class="QSpinBox" name="userIdSpinBox">
+           <property name="prefix">
+            <string>User Id: </string>
+           </property>
+           <property name="minimum">
+            <number>1</number>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QPushButton" name="removeUserButton">
+           <property name="text">
+            <string>Remove User</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
       </layout>
      </widget>
