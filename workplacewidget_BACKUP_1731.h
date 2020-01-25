@@ -35,18 +35,15 @@ private slots:
 
     void on_removeGoodButton_clicked();
 
+<<<<<<< HEAD
+=======
     void on_addToCartButton_clicked();
 
     void on_removeFromCartButton_clicked();
 
     void on_removeUserButton_clicked();
 
-    void on_changeGoodButton_clicked();
-
-    void on_changeUserButton_clicked();
-
-    void on_addUserButton_clicked();
-
+>>>>>>> 0929b0ec4e55160527952eed131812f6712f9bdf
 private:
 
     Ui::WorkplaceWidget *ui;

@@ -31,22 +31,6 @@ private slots:
 
     void on_tabWidget_currentChanged(int index);
 
-    void on_addGoodButton_clicked();
-
-    void on_removeGoodButton_clicked();
-
-    void on_addToCartButton_clicked();
-
-    void on_removeFromCartButton_clicked();
-
-    void on_removeUserButton_clicked();
-
-    void on_changeGoodButton_clicked();
-
-    void on_changeUserButton_clicked();
-
-    void on_addUserButton_clicked();
-
 private:
 
     Ui::WorkplaceWidget *ui;

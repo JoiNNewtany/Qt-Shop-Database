@@ -167,7 +167,7 @@ void WorkplaceWidget::on_addToCartButton_clicked()
     addToCartCheck.exec();
     addToCartCheck.next();
 
-    if (ui->cartIdSpinBox->value() <= addToCartCheck.value(0).toInt())
+    if (ui->cartIdSpinBox->value() < addToCartCheck.value(0).toInt())
     {
         QSqlQuery addToCart("INSERT INTO Cart (UserId, GoodId) VALUES (?, ?)");
         addToCart.addBindValue(userID);
@@ -194,64 +194,6 @@ void WorkplaceWidget::on_removeFromCartButton_clicked()
     UpdateModel(ui->userTableView,
         "SELECT c.Id, g.Name, g.Cost FROM Cart c, Goods g WHERE c.userID = ? AND g.Id = c.GoodId",
         userID);
-}
-
-
-void WorkplaceWidget::on_changeGoodButton_clicked()
-{
-    QSqlQuery changeGoodCheck("SELECT Id FROM Goods WHERE Id = ?");
-    changeGoodCheck.addBindValue(ui->goodIdSpinBox->value());
-    changeGoodCheck.exec();
-    changeGoodCheck.next();
-
-    if (!changeGoodCheck.value(0).isNull() &&
-        ui->goodNameEdit->text().length() > 0)
-    {
-        QSqlQuery updateGood("UPDATE Goods SET Name = ?, Cost = ? WHERE Id = ?");
-        updateGood.addBindValue(ui->goodNameEdit->text());
-        updateGood.addBindValue(ui->goodPriceEdit->value());
-        updateGood.addBindValue(ui->goodIdSpinBox->value());
-        qDebug() << updateGood.exec();
-
-        UpdateModel(ui->vendorTableView, "SELECT * FROM Goods", -1);
-    }
-}
-
-void WorkplaceWidget::on_changeUserButton_clicked()
-{
-    QSqlQuery changeUserCheck("SELECT Id FROM Users WHERE Id = ?");
-    changeUserCheck.addBindValue(ui->userIdSpinBox->value());
-    changeUserCheck.exec();
-    changeUserCheck.next();
-
-    if (!changeUserCheck.value(0).isNull() &&
-        ui->userNameEdit->text().length() > 0 &&
-        ui->userPasswordEdit->text().length() > 0)
-    {
-        QSqlQuery updateUser("UPDATE Users SET Username = ?, Password = ?, AccessLv = ? WHERE Id = ?");
-        updateUser.addBindValue(ui->userNameEdit->text());
-        updateUser.addBindValue(ui->userPasswordEdit->text());
-        updateUser.addBindValue(ui->userAccessLvEdit->currentIndex());
-        updateUser.addBindValue(ui->userIdSpinBox->value());
-        qDebug() << updateUser.exec();
-
-        UpdateModel(ui->adminTableView, "SELECT * FROM Users", -1);
-    }
-}
-
-void WorkplaceWidget::on_addUserButton_clicked()
-{
-    if (ui->userNameEdit->text().length() > 0 &&
-        ui->userPasswordEdit->text().length())
-    {
-        QSqlQuery q("INSERT INTO Users(Username, Password, AccessLv) VALUES (?, ?, ?)");
-        q.addBindValue(ui->userNameEdit->text());
-        q.addBindValue(ui->userPasswordEdit->text());
-        q.addBindValue(ui->userAccessLvEdit->currentIndex());
-        q.exec();
-
-        UpdateModel(ui->adminTableView, "SELECT * FROM Users", -1);
-    }
 }
 
 void WorkplaceWidget::on_removeUserButton_clicked()

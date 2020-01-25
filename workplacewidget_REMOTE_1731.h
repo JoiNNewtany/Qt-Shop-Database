@@ -41,12 +41,6 @@ private slots:
 
     void on_removeUserButton_clicked();
 
-    void on_changeGoodButton_clicked();
-
-    void on_changeUserButton_clicked();
-
-    void on_addUserButton_clicked();
-
 private:
 
     Ui::WorkplaceWidget *ui;
